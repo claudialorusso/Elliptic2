@@ -3,3 +3,8 @@
 /dataset/
 /GLASS/
 .venv/
+
+# Local datasets and nested external repositories
+/dataset/
+/GLASS/
+.venv/
