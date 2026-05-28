@@ -1,0 +1,5 @@
+
+# Local datasets and external nested repositories
+/dataset/
+/GLASS/
+.venv/
