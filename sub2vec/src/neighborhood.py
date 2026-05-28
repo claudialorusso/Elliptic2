@@ -9,12 +9,12 @@ def arr2str(arr):
     for i in arr:
         result += " "+str(i)
     return result
-    
+
 
 def generateWalkFile(dirName, walkLength):
     walkFile = open(dirName+'.walk', 'w')
     indexToName = {}
-    
+
     for  root, dirs, files in os.walk(dirName):
         index = 0
         for name in files:
@@ -28,12 +28,12 @@ def generateWalkFile(dirName, walkLength):
             indexToName[index] = name
             index += 1
     walkFile.close()
-    
+
     return indexToName
-    
+
 def saveVectors(vectors, outputfile, IdToName):
     output = open(outputfile, 'w')
-    
+
     output.write(str(len(vectors)) +"\n")
     for i in range(len(vectors)):
         output.write(str(IdToName[i]))
@@ -41,8 +41,8 @@ def saveVectors(vectors, outputfile, IdToName):
             output.write('\t'+ str(j))
         output.write('\n')
     output.close()
-    
-    
+
+
 def neighborhood_embedding(args):
     inputDir = args.input
     outputFile = args.output
@@ -51,7 +51,7 @@ def neighborhood_embedding(args):
     window = args.windowSize
     dm = 1 if args.model == 'dm' else 0
     if not os.path.isfile(inputDir+'.walk'):
-        indexToName = generateWalkFile(inputDir, args.walkLength, args.p)
+        indexToName = generateWalkFile(inputDir, args.walkLength)  # indexToName = generateWalkFile(inputDir, args.walkLength, args.p)
     else:
         print(".walk file already exist")
         indexToName = {}
@@ -63,12 +63,12 @@ def neighborhood_embedding(args):
     sentences = doc.TaggedLineDocument(inputDir+'.walk')
     print("finish generate sentences")
     model = doc.Doc2Vec(sentences, vector_size = dimensions, epochs = iterations, dm = dm, window = window )
-    
-    saveVectors(list(model.dv.vectors), outputFile, indexToName)
-    
-    
-    
-    
-    
 
-    
+    saveVectors(list(model.dv.vectors), outputFile, indexToName)
+
+
+
+
+
+
+

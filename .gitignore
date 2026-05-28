@@ -8,3 +8,8 @@
 /dataset/
 /GLASS/
 .venv/
+
+# Local manual backups
+/backups_before_manual_patch/
+__pycache__/
+*/__pycache__/

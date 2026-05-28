@@ -2,14 +2,15 @@ import pandas as pd
 import torch
 import pickle
 import numpy as np
-import os 
-
+import os
+import time
+preprocessing_start = time.time()
 #Parameters
 DATAPATH = "./dataset/"
 
 #Read in Node ID
 n2id = {}
-with open('n2id.pkl', 'rb') as handle:
+with open('./GLASS/dataset/elliptic/n2id.pkl', 'rb') as handle:
     n2id = pickle.load(handle)
 
 #Read in Subgraph ID
@@ -27,9 +28,9 @@ for row in node.itertuples(index=False):
     else:
         sub[cc2id[int(row[1])]] = [n2id[int(row[0])]]
 
-#Read in edge list (undirected as reference to paper)    
+#Read in edge list (undirected as reference to paper)
 adj = {}
-file = open("./edge_list.txt","r")
+file = open("./GLASS/dataset/elliptic/edge_list.txt","r")
 Lines = file.readlines()
 print(len(Lines))
 for line in Lines:
@@ -81,4 +82,7 @@ with open('label.pkl', 'wb') as fp:
     pickle.dump(label, fp)
 #torch.save(torch.from_numpy(y),"label.pt")
 print("Generated "+str(count)+" subgraphs in which "+str(isolate)+" are isolated")
-    
+
+tot_time = time.time() - preprocessing_start
+print(f"\033[33mTotal runtime: {tot_time:.2f}s\033[0m")
+print(f"\033[33mTotal runtime: {tot_time/ 60:.2f}min\033[0m")

@@ -4,6 +4,7 @@ import random
 import time
 import pickle
 
+preprocessing_start = time.time()
 #Parameters
 DATAPATH = "./dataset/"
 train = 0.8 #percentage of training subgraph
@@ -51,9 +52,9 @@ print("time to store edgelist", time.time()-start)
 #Read in Subgraph
 
 start = time.time()
-cc = pd.read_csv(DATAPATH+"connected_components.csv")
-edge = pd.read_csv(DATAPATH+"edges.csv")
-node = pd.read_csv(DATAPATH+"nodes.csv")
+cc = pd.read_csv(DATAPATH+"/connected_components.csv")
+edge = pd.read_csv(DATAPATH+"/edges.csv")
+node = pd.read_csv(DATAPATH+"/nodes.csv")
 print("load rest time", time.time()-start)
 start = time.time()
 
@@ -74,6 +75,33 @@ for row in node.itertuples(index=False):
 
 #Generate Subgraph.pth
 file = open("./subgraphs.pth","w")
+
+#fair and customised splitting policy
+# NB since it does caching, if swapping between the two kinds of splitting methods, delete :train_sub_G.pt val_sub_G.pt and test_sub_G.pt
+train_count = 0
+val_count = 0
+test_count = 0
+for i in sub.keys():
+    label = cc.loc[i, "ccLabel"]
+    split_value = cc.loc[i, "split"]
+    if split_value == "TRN":
+        split_str = "train"
+        train_count += 1
+    elif split_value == "VAL":
+        split_str = "val"
+        val_count += 1
+    elif split_value == "TST":
+        split_str = "test"
+        test_count += 1
+    else:
+        continue
+    file.write(sub[i] + "\t" + label + "\t" + split_str + "\n")
+
+print("TRAIN:", train_count)
+print("VAL:", val_count)
+print("TEST:", test_count)
+"""
+# original splitting policy
 counter = 0
 for i in sub.keys():
     counter += 1
@@ -84,6 +112,9 @@ for i in sub.keys():
         file.write(sub[i]+"\t"+label+"\t"+"val\n")
     else:
         file.write(sub[i]+"\t"+label+"\t"+"test\n")
+"""
 file.close()
 print("generate subgraph.pth time: ", time.time()-start)
-
+tot_time = time.time() - preprocessing_start
+print(f"\033[33mTotal runtime: {tot_time:.2f}s\033[0m")
+print(f"\033[33mTotal runtime: {tot_time/ 60:.2f}min\033[0m")
