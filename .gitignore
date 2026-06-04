@@ -13,3 +13,4 @@
 /backups_before_manual_patch/
 __pycache__/
 */__pycache__/
+GLASS/checkpoints/
